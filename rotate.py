@@ -3,8 +3,8 @@
 # 回転画像を作成
 # vottプロジェクトごと変換するので、バックアップしておくこと
 
-_vott_dir = 'c:/vott/CMJ_PoC_2023_cmj8/'    # 最後に「/」を付けること
-_vott_file = 'CMJ_PoC_2023_cmj8.vott'
+_vott_dir = 'c:/vott/test200/'    # 最後に「/」を付けること
+_vott_file = 'test200.vott'
 
 import json
 import cv2
