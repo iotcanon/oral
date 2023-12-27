@@ -3,7 +3,8 @@
 # PythonのGUIライブラリ「Tkinter」を使って簡単な画像編集ツールを作ってみた
 # https://iatom.hatenablog.com/entry/2020/11/01/151945
 
-import os,sys
+import os
+import sys
 import json
 from tkinter import *
 from tkinter import ttk
@@ -19,6 +20,11 @@ color_purple = (128, 0, 128)  # 紫
 color_red = (0, 0, 255)  # 赤
 color_orange = (0, 165, 255)  # 橙
 color_yellow = (0, 255, 255)  # 黄
+
+IN_IMG_FILE = "./$output_image.png"
+OUT_IMG_FILE = "./$input_image.png"
+CANVAS_W = 320
+CANVAS_H = 440
 
 class image_gui():
     # 変数
@@ -38,40 +44,40 @@ class image_gui():
         # ファイル削除処理
         self.file_del()
         # 参照ボタン配置
-        button1 = Button(root, text=u'JSONファイルのディレクトリ選択', command=self.dir_button_clicked)
+        button1 = Button(root, text = 'JSONファイルのディレクトリ選択', command = self.dir_button_clicked)
         button1.grid(row=0, column=1)
-        button1.place(x=470, y=3)
+        button1.place(x = 470, y = 3)
 
-        button2 = Button(root, text=u'JPEGファイル選択', command=self.file_button_clicked)
-        button2.grid(row=0, column=1)
-        button2.place(x=470, y=32)
+        button2 = Button(root, text = 'JPEGファイル選択', command=self.file_button_clicked)
+        button2.grid(row=0, column = 1)
+        button2.place(x = 470, y = 32)
 
         # 閉じるボタン
-        close1 = Button(root,text=u'閉じる',command=self.close_clicked)
-        close1.grid(row=0,column=3)
-        close1.place(x=690,y=3)
+        close1 = Button(root, text= '閉じる', command = self.close_clicked)
+        close1.grid(row = 0, column = 3)
+        close1.place(x = 690, y = 3)
 
         # 描画ボタン
-        paint1 = Button(root,text=u'汚れ描画',command=self.repaint)
-        paint1.grid(row=0,column=3)
-        paint1.place(x=680,y=32)
+        paint1 = Button(root, text = '汚れ描画', command = self.repaint)
+        paint1.grid(row = 0, column = 3)
+        paint1.place(x = 680, y = 32)
 
         # 参照ファイルパス表示ラベルの作成
         self.dir1 = StringVar()
-        self.dir1_entry = ttk.Entry(root,textvariable=self.dir1, width=50)
-        self.dir1_entry.grid(row=0, column=2)
-        self.dir1_entry.place(x=12,y=10)
+        self.dir1_entry = ttk.Entry(root, textvariable = self.dir1, width = 50)
+        self.dir1_entry.grid(row = 0, column = 2)
+        self.dir1_entry.place(x = 12, y = 10)
         self.file1 = StringVar()
-        self.file1_entry = ttk.Entry(root,textvariable=self.file1, width=70)
-        self.file1_entry.grid(row=0, column=2)
-        self.file1_entry.place(x=12,y=35)
+        self.file1_entry = ttk.Entry(root, textvariable=self.file1, width = 70)
+        self.file1_entry.grid(row=0, column = 2)
+        self.file1_entry.place(x = 12,y = 35)
 
     # ファイルを削除
     def file_del(self):
-        if os.path.exists("./output_image_small.png") == True:
-            os.remove("./output_image_small.png")        
-        if os.path.exists("./input_image.png") == True:
-            os.remove("./input_image.png")
+        if os.path.exists(IN_IMG_FILE) == True:
+            os.remove(IN_IMG_FILE)        
+        if os.path.exists(OUT_IMG_FILE) == True:
+            os.remove(OUT_IMG_FILE)
 
     # フォームを閉じる
     def close_clicked(self):
@@ -127,34 +133,35 @@ class image_gui():
         self.purple.set(80)
         self.purple.place(x=335,y=60)
         # 彩度変更用のスケールバーの設定
-        self.red = Scale(root, label='赤', orient='h',
-                         from_=0, to=100,length=95, command=self.onSlider,resolution=1)
+        self.red = Scale(root, label = '赤', orient = 'h',
+                         from_ = 0, to = 100, length = 95, command = self.onSlider, resolution = 1)
         self.red.set(60)
-        self.red.place(x=335,y=130)
+        self.red.place(x = 335, y = 130)
         # 明度変更用のスケールバーの設定
-        self.orange = Scale(root, label='橙', orient='h',
-                         from_=0, to=100,length=95, command=self.onSlider,resolution=1)
+        self.orange = Scale(root, label = '橙', orient = 'h',
+                         from_ = 0, to = 100, length = 95, command = self.onSlider, resolution = 1)
         self.orange.set(40)
-        self.orange.place(x=335,y=200)
+        self.orange.place(x = 335, y = 200)
         #　ぼかしのスケールバーの設定
-        self.yellow = Scale(root, label='黄', orient='h',
-                         from_=0, to=100,length=95, command=self.onSlider,resolution=1)
+        self.yellow = Scale(root, label = '黄', orient = 'h',
+                         from_ = 0, to = 100, length = 95, command = self.onSlider, resolution = 1)
         self.yellow.set(20)
-        self.yellow.place(x=335,y=270)        
+        self.yellow.place(x = 335, y = 270)        
  
         # 画像ファイル読み込みと表示用画像サイズに変更と保存
         img = cv2.imread(self.filepath)
-        #cv2.imwrite("input_image_file.jpeg",img)
-        img2 = cv2.resize(img,dsize=(320,240))
-        cv2.imwrite("input_image.png",img2)
+        img2 = self.resize(img, CANVAS_W, CANVAS_H)
+        cv2.imwrite(OUT_IMG_FILE, img2)
     
         # 入力画像を画面に表示
-        self.out_image = ImageTk.PhotoImage(file="input_image.png")
-        input_canvas.create_image(163, 122, image=self.out_image)
+        self.input_image = ImageTk.PhotoImage(file = OUT_IMG_FILE)
+        print('input shape', self.input_image.width(), self.input_image.height())
+        input_canvas.create_image(0, 0, image = self.input_image, anchor="nw")
 
-    def onSlider(self,args):
+    def onSlider(self, args):
         pass
 
+    # 汚れを描画
     def repaint(self):
         if not self.filepath or not self.jsondir:
             return
@@ -168,12 +175,13 @@ class image_gui():
         i_out = self.stain(jsonpath, self.filepath)
 
         # 表示用に画像サイズを小さくする
-        img2 = cv2.resize(i_out,dsize=(320,240))
+        img2 = self.resize(i_out, CANVAS_W, CANVAS_H)
         # 出力画像を保存
-        cv2.imwrite("output_image_small.png",img2)
+        cv2.imwrite(IN_IMG_FILE, img2)
         # 画像をセット
-        self.out_image2 = ImageTk.PhotoImage(file="output_image_small.png")
-        output_canvas.create_image(160, 120, image=self.out_image2)
+        self.out_image = ImageTk.PhotoImage(file = IN_IMG_FILE)
+        print('output shape', self.out_image.width(), self.out_image.height())
+        output_canvas.create_image(0, 0, image = self.out_image, anchor="nw")
 
     def stain(self, json_path, image_path):
         image = cv2.imread(image_path)
@@ -190,7 +198,6 @@ class image_gui():
             background = list(filter(lambda item : item['class'] == 'background', class_list))[0]['confidence']
             plaque = list(filter(lambda item : item['class'] == 'plaque', class_list))[0]['confidence']
             #print(x, y, background, plaque)
-            #if confidence >= 50:
             if background < plaque:
                 if self.purple.get() < plaque:
                     image[y, x] = color_purple
@@ -204,17 +211,30 @@ class image_gui():
                     pass
         return image
 
+    def resize(self, img, width, height):
+        h, w = img.shape[:2]
+        aspect = w / h
+        if width / height >= aspect:
+            nh = height
+            nw = round(nh * aspect)
+        else:
+            nw = width
+            nh = round(nw / aspect)
+        dst = cv2.resize(img, dsize=(nw, nh))
+        print('resize', nw, nh)
+        return dst
+
 if __name__ == '__main__':
     root = Tk()
-    root.title("Image Viewer")
+    root.title("汚れシミュレーション")
     # GUI全体のフレームサイズ
-    root.geometry("770x400")
+    root.geometry("770x550")
     # 出力ファイル画像表示の場所指定とサイズ指定
-    output_canvas = Canvas(root, width=320, height=240)
-    output_canvas.place(x=440, y=90)
+    output_canvas = Canvas(root, width = CANVAS_W, height = CANVAS_H, bg='#DDD')
+    output_canvas.place(x = 440, y = 90)
     #　入力ファイル画像表示の場所指定とサイズ指定
-    input_canvas = Canvas(root, width=320, height=240)
-    input_canvas.place(x=5, y=90)
+    input_canvas = Canvas(root, width = CANVAS_W, height = CANVAS_H, bg='#DDD')
+    input_canvas.place(x = 5, y = 90)
     # GUI表示
     image_gui(root)
     root.mainloop()
