@@ -127,26 +127,30 @@ class image_gui():
 
     # 参照ボタンクリック時に起動するメソッド
     def image_changed(self):
-        # ガンマ補正用のスケールバーの設定
+        # 紫のスケールバーの設定
         self.purple = Scale(root, label='紫', orient='h',
                          from_=0, to=100,length=95, command=self.onSlider,resolution=1)
         self.purple.set(80)
         self.purple.place(x=335,y=60)
-        # 彩度変更用のスケールバーの設定
+        # 赤のスケールバーの設定
         self.red = Scale(root, label = '赤', orient = 'h',
                          from_ = 0, to = 100, length = 95, command = self.onSlider, resolution = 1)
         self.red.set(60)
         self.red.place(x = 335, y = 130)
-        # 明度変更用のスケールバーの設定
+        # 橙のスケールバーの設定
         self.orange = Scale(root, label = '橙', orient = 'h',
                          from_ = 0, to = 100, length = 95, command = self.onSlider, resolution = 1)
         self.orange.set(40)
         self.orange.place(x = 335, y = 200)
-        #　ぼかしのスケールバーの設定
+        # 黄のスケールバーの設定
         self.yellow = Scale(root, label = '黄', orient = 'h',
                          from_ = 0, to = 100, length = 95, command = self.onSlider, resolution = 1)
         self.yellow.set(20)
-        self.yellow.place(x = 335, y = 270)        
+        self.yellow.place(x = 335, y = 270)
+        # チェックボックス
+        self.checkvar = BooleanVar()
+        self.check = Checkbutton(text = '背景比較しない', variable = self.checkvar)
+        self.check.place(x = 335, y = 400)
  
         # 画像ファイル読み込みと表示用画像サイズに変更と保存
         img = cv2.imread(self.filepath)
@@ -198,7 +202,7 @@ class image_gui():
             background = list(filter(lambda item : item['class'] == 'background', class_list))[0]['confidence']
             plaque = list(filter(lambda item : item['class'] == 'plaque', class_list))[0]['confidence']
             #print(x, y, background, plaque)
-            if background < plaque:
+            if background < plaque or self.checkvar.get():
                 if self.purple.get() < plaque:
                     image[y, x] = color_purple
                 elif self.red.get() < plaque:
