@@ -39,6 +39,16 @@ class image_gui():
     output_canvas = None
     #chg_out = None
 
+    # imreadが日本語のパスに未対応の為
+    def imread(self, filename, flags=cv2.IMREAD_COLOR, dtype=np.uint8):
+        try:
+            n = np.fromfile(filename, dtype)
+            img = cv2.imdecode(n, flags)
+            return img
+        except Exception as e:
+            print(e)
+            return None
+        
     # 初期設定
     def __init__(self, main):
         # ファイル削除処理
@@ -46,29 +56,29 @@ class image_gui():
         # 参照ボタン配置
         button1 = Button(root, text = 'JSONファイルのディレクトリ選択', command = self.dir_button_clicked)
         button1.grid(row=0, column=1)
-        button1.place(x = 470, y = 3)
+        button1.place(x = 570, y = 3)
 
         button2 = Button(root, text = 'JPEGファイル選択', command=self.file_button_clicked)
         button2.grid(row=0, column = 1)
-        button2.place(x = 470, y = 32)
+        button2.place(x = 570, y = 32)
 
         # 閉じるボタン
         close1 = Button(root, text= '閉じる', command = self.close_clicked)
         close1.grid(row = 0, column = 3)
-        close1.place(x = 690, y = 3)
+        close1.place(x = 790, y = 3)
 
         # 描画ボタン
         paint1 = Button(root, text = '汚れ描画', command = self.repaint)
         paint1.grid(row = 0, column = 3)
-        paint1.place(x = 680, y = 32)
+        paint1.place(x = 780, y = 32)
 
         # 参照ファイルパス表示ラベルの作成
         self.dir1 = StringVar()
-        self.dir1_entry = ttk.Entry(root, textvariable = self.dir1, width = 50)
+        self.dir1_entry = ttk.Entry(root, textvariable = self.dir1, width = 70)
         self.dir1_entry.grid(row = 0, column = 2)
         self.dir1_entry.place(x = 12, y = 10)
         self.file1 = StringVar()
-        self.file1_entry = ttk.Entry(root, textvariable=self.file1, width = 70)
+        self.file1_entry = ttk.Entry(root, textvariable=self.file1, width = 90)
         self.file1_entry.grid(row=0, column = 2)
         self.file1_entry.place(x = 12,y = 35)
 
@@ -128,23 +138,23 @@ class image_gui():
     # 参照ボタンクリック時に起動するメソッド
     def image_changed(self):
         # 紫のスケールバーの設定
-        self.purple = Scale(root, label='紫', orient='h',
-                         from_=0, to=100,length=95, command=self.onSlider,resolution=1)
+        self.purple = Scale(root, label = '紫', orient = 'h',
+                         from_ = 0, to = 100, length = 195, command=self.onSlider, resolution = 1)
         self.purple.set(80)
         self.purple.place(x=335,y=60)
         # 赤のスケールバーの設定
         self.red = Scale(root, label = '赤', orient = 'h',
-                         from_ = 0, to = 100, length = 95, command = self.onSlider, resolution = 1)
+                         from_ = 0, to = 100, length = 195, command = self.onSlider, resolution = 1)
         self.red.set(60)
         self.red.place(x = 335, y = 130)
         # 橙のスケールバーの設定
         self.orange = Scale(root, label = '橙', orient = 'h',
-                         from_ = 0, to = 100, length = 95, command = self.onSlider, resolution = 1)
+                         from_ = 0, to = 100, length = 195, command = self.onSlider, resolution = 1)
         self.orange.set(40)
         self.orange.place(x = 335, y = 200)
         # 黄のスケールバーの設定
         self.yellow = Scale(root, label = '黄', orient = 'h',
-                         from_ = 0, to = 100, length = 95, command = self.onSlider, resolution = 1)
+                         from_ = 0, to = 100, length = 195, command = self.onSlider, resolution = 1)
         self.yellow.set(20)
         self.yellow.place(x = 335, y = 270)
         # チェックボックス
@@ -153,7 +163,7 @@ class image_gui():
         self.check.place(x = 335, y = 400)
  
         # 画像ファイル読み込みと表示用画像サイズに変更と保存
-        img = cv2.imread(self.filepath)
+        img = self.imread(self.filepath)
         img2 = self.resize(img, CANVAS_W, CANVAS_H)
         cv2.imwrite(OUT_IMG_FILE, img2)
     
@@ -188,7 +198,7 @@ class image_gui():
         output_canvas.create_image(0, 0, image = self.out_image, anchor="nw")
 
     def stain(self, json_path, image_path):
-        image = cv2.imread(image_path)
+        image = self.imread(image_path)
         with open(json_path) as f:
             d = json.load(f)
         for p in d['confidence_points']:
@@ -232,10 +242,10 @@ if __name__ == '__main__':
     root = Tk()
     root.title("汚れシミュレーション")
     # GUI全体のフレームサイズ
-    root.geometry("770x550")
+    root.geometry("870x550")
     # 出力ファイル画像表示の場所指定とサイズ指定
     output_canvas = Canvas(root, width = CANVAS_W, height = CANVAS_H, bg='#DDD')
-    output_canvas.place(x = 440, y = 90)
+    output_canvas.place(x = 540, y = 90)
     #　入力ファイル画像表示の場所指定とサイズ指定
     input_canvas = Canvas(root, width = CANVAS_W, height = CANVAS_H, bg='#DDD')
     input_canvas.place(x = 5, y = 90)
