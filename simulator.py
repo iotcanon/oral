@@ -28,7 +28,8 @@ CANVAS_H = 440
 
 class image_gui():
     # 変数
-    cdir = os.path.abspath(os.path.dirname(__file__))
+    #cdir = os.path.abspath(os.path.dirname(__file__))
+    cdir = os.path.dirname(os.path.abspath(sys.argv[0]))
     jsondir = None
     filepath = None
     purple = None
